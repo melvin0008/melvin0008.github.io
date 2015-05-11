@@ -68,14 +68,14 @@ First, register the btford-socketio module in app.js
 	var app=angular.module('ionic-socketio-chat-client', ['ionic','btford.socket-io'])
 
 Add the newly added libraries to index.html before the link to app.js
-    
+<%highlight javascript>
 	<!--socket io client library-->
 	<script src="http://chat.socket.io/socket.io/socket.io.js"></script>
 	
 	<!-- Other Libraries-->
 	<script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="lib/angular-socket-io/socket.js"></script>
-
+<%endhighlight>
 Add the controllers, services, and directive files you just created to index.html after the link to app.js
 
 	<!-- your controllers' js -->
