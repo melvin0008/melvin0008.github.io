@@ -31,18 +31,31 @@ Socket.IO provides an event-oriented API that works across all networks, devices
 
 Install Ionic from this link.
 
+```sh
 	npm install -g cordova ionic
+```
+
 or   
 
+```sh        
+
 	bower install cordova ionic
+```
 
 Create a blank project.
 
+```sh        
+
 	ionic start chat-app blank
+```                
 
 As Ionic apps are written in Angular, get the Angular Socket.IO library
 
+```sh
+
 	bower install angular-socket-io
+
+```
 
 Create new folders and new files, so that the structure of the www directory matches the structure in the image below:
 
@@ -63,13 +76,13 @@ The app.js file is where you register different modules to create your main modu
 
 Starting with app.js and index.html:
 
-First, register the btford-socketio module in app.js
+First, register the btford-socketio module in app.js.    
 
-```javascript
+```javascript      
 
 	var app=angular.module('ionic-socketio-chat-client', ['ionic','btford.socket-io'])
 ```
-Add the newly added libraries to index.html before the link to app.js
+Add the newly added libraries to index.html before the link to app.js.
 
 ```html
 
@@ -79,8 +92,10 @@ Add the newly added libraries to index.html before the link to app.js
 	<!-- Other Libraries-->
 	<script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="lib/angular-socket-io/socket.js"></script>
+
 ```
-Add the controllers, services, and directive files you just created to index.html after the link to app.js
+Add the controllers, services, and directive files you just created to index.html after the link to app.js.
+
 ```html
 	
 	<!-- your controllers' js -->
@@ -94,6 +109,7 @@ Add the controllers, services, and directive files you just created to index.htm
 	<script src="js/directives.js"></script>
 ```
 Also replace the body tag of index.html to reflect the module name in ng-app.
+
 ```html
 
 	<body ng-app="ionic-socketio-chat-client">
@@ -115,7 +131,9 @@ and templateUrl as ‘templates/chat.html’
 Each state has many parameters. We will be using the url and templateUrl parameter. To know more about the other parameters, please refer this link.
 
 After the changes, your app.js file should look like this:
+
 ```javascript
+
 	// Ionic Socket IO app
 	
 	var app=angular.module('ionic-socketio-chat-client', ['ionic', 'ngSanitize','btford.socket-io'])
@@ -153,6 +171,7 @@ After the changes, your app.js file should look like this:
 
 
 ##Write your login template:
+
 ```html
 
 	<ion-view ng-controller="LoginController as logcntrl" class="light">
@@ -180,10 +199,12 @@ In the Login Controller, we define a function named join.
 
 We first sanitize the input entered by the user using Angular’s two-way binding. We will use Angular’s [$sanitize](https://docs.angularjs.org/api/ngSanitize/service/$sanitize) for this.
 
-After this, we change the state to chat using
+After this, we change the state to chat using :       
+
 ```javascript
 
 	$state.go('chat',{nickname:nickname})
+
 ```
 
 Your Controller should like this after the required changes:    
@@ -210,6 +231,8 @@ For this example, we will be connecting with [http://chat.socket.io](http://chat
 
 We will create a service named socket in the file socket.js in the services directory.
 
+```javascript
+
 	app.factory('socket',function(socketFactory){
 		//Create socket and connect to http://chat.socket.io 
 	 	var myIoSocket = io.connect('http://chat.socket.io');
@@ -221,6 +244,8 @@ We will create a service named socket in the file socket.js in the services dire
 		return mySocket;
 	})
 
+```
+
 We inject socketFactory, which is an API for instantiating sockets that are integrated with Angular's digest cycle. To learn more about the different parameters, check [btford’s library](https://github.com/btford/angular-socket-io).
 
 ##Writing the Chat Template:
@@ -231,6 +256,8 @@ We check whether the the connected property is set to true. If it is, we will di
 For all the other messages, we will be using the ng-repeat directive to iterate over the messages object.
 
 At the bottom, we have a fixed message box. We use the ng-change directive to detect changes in the message. If the user inputs text or makes changes, the updateTyping() function is called.
+
+```html
 
 	<ion-view view-title="Socket.IO Chat Demo" ng-controller="ChatController as chatCtrl" class="light-grey">
 	 	<ion-nav-bar class="bar-dark">
@@ -264,9 +291,14 @@ At the bottom, we have a fixed message box. We use the ng-change directive to de
 		</div> 	
 	 </ion-view>
 
+```
+
+
 We can add icons to buttons very easily in Ionic. The button next to the message box contains an ion icon. 
 
 We can also write a directive to call a function on enter rather than using ng-click. This improves the user experience. To add a directive, add the following to the directives.js
+
+```javascript
 
 	app.directive('ngEnter', function() {
 	        return function(scope, element, attrs) {
@@ -280,6 +312,9 @@ We can also write a directive to call a function on enter rather than using ng-c
 	            });
 	        };
 	});
+
+```
+
 We call the sendMessage function defined in the Chat Controller on ng-click or the above directive.
 
 ##Adding Custom CSS:
@@ -301,6 +336,8 @@ If the CSS is redundant, please ignore it.
 We can use the socket service created above to perform chatting operations.    
 Inject this service in controllers and use socket as you will have in any other JavaScript projects.
 
+```javascript
+
 	app.controller('ChatController',function(socket) {
 	
 	    socket.on('connect',function(){
@@ -309,12 +346,19 @@ Inject this service in controllers and use socket as you will have in any other 
 	    }
 	}
 
+```
+
+
 ##Emitting Events:
 The main idea behind Socket.IO is that you can send and receive any events you want, with any data you want. Any objects that can be encoded as JSON will do, and binary data is supported, too.
 
 For example, let’s emit a message to all the users at http://chat.socket.io.
-	
+
+```javascript
+
 	socket.emit('new message',”Hi Socket IO is awesome”)
+
+```
 
 ##Listening to Events:
 Socket.IO is bidirectional, which means we can send events to the server, and the server can also send events to us at any time during the communication.
@@ -323,11 +367,17 @@ Socket.IO is bidirectional, which means we can send events to the server, and th
 
 For example, let’s listen to a new event called 'new message' . This event will be sent by the host to which you are connected.
 
+```javascript
+
 	socket.on('new message', function (data) {
 	    addMessageToList(data.username,true,data.message)
 	});
 
+```
+
 When the user hits send message, we first emit an event with a ‘new message’ and then add the message to our list of messages (i.e., display on the client screen).
+
+```javascript
 
 	//function called when user hits the send button
 	self.sendMessage=function(){
@@ -345,6 +395,8 @@ When the user hits send message, we first emit an event with a ‘new message’
 	    $ionicScrollDelegate.scrollBottom(); // Scroll to bottom to read the latest
 	}
 
+```
+
 This is what the function addMessageToList looks like. You can customize it as you want.    
 
 We will add content, style , username and color to the message list, which will be displayed using ng-repeat directive.
@@ -356,6 +408,8 @@ We use [$ionicScrollDelegate](http://ionicframework.com/docs/api/service/$ionicS
 **For user joined and user left, we define two functions**:
 
 Similarly, we listen to the ‘user joined’ and ‘user left’ event.
+
+```javascript
 
 	// Whenever the server emits 'user joined', log it in the chat body
 	  socket.on('user joined', function (data) {
@@ -375,9 +429,13 @@ Similarly, we listen to the ‘user joined’ and ‘user left’ event.
 	  	return number_of_users === 1 ? "there's 1 participant":"there are " + number_of_users + " participants"
 	  }
 
+```
+
 **For user typing messages**:
 
 We listen to ‘typing’ and ‘stop typing’ events to perform the action. This is again done using socket.on(event name).
+
+```javascript
 
 	//Whenever the server emits 'typing', show the typing message
 	  socket.on('typing', function (data) {
@@ -399,11 +457,16 @@ We listen to ‘typing’ and ‘stop typing’ events to perform the action. Th
 	  	self.messages = self.messages.filter(function(element){return element.username != username || element.content != " is typing"})
 	}
 
+```
+
+
 These functions are fairly straightforward.   
 
 In the removeChat typing function, we use a javascript [filter](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) to  filter out messages from the messages list to remove the is typing message.
 
 We also need to emit a ‘typing’ event to the server when the user is typing.
+
+```javascript
 
 	// Updates the typing event
 	  function sendUpdateTyping(){
@@ -424,6 +487,7 @@ We also need to emit a ‘typing’ event to the server when the user is typing.
 	      	}, TYPING_TIMER_LENGTH)
 	  }
 
+```
 We use the ng-change directive defined in the chat.html template. On every input changed, the above function is called. We set a timeout so that we can remove the typing message when the user stops typing. To get the entire ChatController.js, please refer the [link on github](https://github.com/melvin0008/ionic-socketio-chat-client/blob/master/www/js/controllers/ChatController.js).
 
 ##Final Build:
@@ -433,13 +497,25 @@ For Android check, the setup on this [link](http://cordova.apache.org/docs/en/3.
 
 For iOS, check the setup on this [link](http://cordova.apache.org/docs/en/3.3.0/guide_platforms_ios_index.md.html#iOS%20Platform%20Guide).
 
-cd into your main project folder. 
- 	cd chat-app
-Add platform : 
-	ionic add platform android or ionic add platform ios
-Run ionic build: 
-	ionic run android or ionic run ios
+cd into your main project folder.
 
+```sh
+
+	cd chat-app
+```
+Add platform : 
+
+```sh
+
+	ionic add platform android or ionic add platform ios
+```
+
+Run ionic build: 
+
+```sh   
+
+	ionic run android or ionic run ios
+```
 
 ##Further Readings:
 
