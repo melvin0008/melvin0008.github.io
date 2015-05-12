@@ -65,19 +65,24 @@ Starting with app.js and index.html:
 
 First, register the btford-socketio module in app.js
 
-	var app=angular.module('ionic-socketio-chat-client', ['ionic','btford.socket-io'])
+```javascript
 
+	var app=angular.module('ionic-socketio-chat-client', ['ionic','btford.socket-io'])
+```
 Add the newly added libraries to index.html before the link to app.js
-<%highlight javascript>
+
+```html
+
 	<!--socket io client library-->
 	<script src="http://chat.socket.io/socket.io/socket.io.js"></script>
 	
 	<!-- Other Libraries-->
 	<script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="lib/angular-socket-io/socket.js"></script>
-<%endhighlight>
+```
 Add the controllers, services, and directive files you just created to index.html after the link to app.js
-
+```html
+	
 	<!-- your controllers' js -->
 	<script src="js/controllers/ChatController.js"></script>
 	<script src="js/controllers/LoginController.js"></script>
@@ -87,12 +92,14 @@ Add the controllers, services, and directive files you just created to index.htm
 	
 	<!--your directives' js -->
 	<script src="js/directives.js"></script>
-
+```
 Also replace the body tag of index.html to reflect the module name in ng-app.
+```html
 
 	<body ng-app="ionic-socketio-chat-client">
 	    <ion-nav-view></ion-nav-view>
 	</body>
+```
 
 Ionic framework uses ui-router library for routing between different states of your application.
 Configure your states in app.js.
@@ -108,6 +115,7 @@ and templateUrl as ‘templates/chat.html’
 Each state has many parameters. We will be using the url and templateUrl parameter. To know more about the other parameters, please refer this link.
 
 After the changes, your app.js file should look like this:
+```javascript
 	// Ionic Socket IO app
 	
 	var app=angular.module('ionic-socketio-chat-client', ['ionic', 'ngSanitize','btford.socket-io'])
@@ -140,8 +148,13 @@ After the changes, your app.js file should look like this:
 	  // if none of the above states are matched, use this as the fallback
 	  $urlRouterProvider.otherwise('/login');
 	})
+```
+
+
 
 ##Write your login template:
+```html
+
 	<ion-view ng-controller="LoginController as logcntrl" class="light">
 	  <ion-content>
 		  <div class="list list-inset light top180">
@@ -153,6 +166,7 @@ After the changes, your app.js file should look like this:
 	  </ion-content>
 	</ion-view>
 
+```
 The [ion view](http://ionicframework.com/docs/api/directive/ionView/) tag is container for view content and any navigational and header bar information. 
 
 The [ion-content](http://ionicframework.com/docs/api/directive/ionContent/) directive provides an easy to use content area that can be configured to use Ionic's custom Scroll View or the built in overflow scrolling of the browser.
@@ -167,10 +181,14 @@ In the Login Controller, we define a function named join.
 We first sanitize the input entered by the user using Angular’s two-way binding. We will use Angular’s [$sanitize](https://docs.angularjs.org/api/ngSanitize/service/$sanitize) for this.
 
 After this, we change the state to chat using
-    
+```javascript
+
 	$state.go('chat',{nickname:nickname})
+```
 
 Your Controller should like this after the required changes:    
+
+```javascript
 
 	app.controller('LoginController',function($state,$sanitize) {
 		var self=this;
@@ -184,7 +202,7 @@ Your Controller should like this after the required changes:
 			}
 		}
 	});
-
+```
 ##Integrating Ionic with SocketIO:
 
 We can use the factory design pattern to create a service that will create a server and connect with the required host.    
