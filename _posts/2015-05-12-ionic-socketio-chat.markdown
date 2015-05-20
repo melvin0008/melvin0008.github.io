@@ -7,6 +7,9 @@ date:   2015-05-12
 In this tutorial, we’ll learn how to create a chat client that communicates with a [Socket.IO Node.JS chat server](https://github.com/Automattic/socket.io/tree/master/examples/chat), using [Ionic](http://ionicframework.com/)!
 
 ![demo](https://github.com/melvin0008/ionic-socketio-chat-client/blob/master/image/demo.gif?raw=true)
+|   Android             |  iOS |    
+| :-------------------------: | :-------------------------: |     
+| ![demo](https://github.com/melvin0008/ionic-socketio-chat-client/blob/demo.gif?raw=true)  |  ![demo](https://github.com/melvin0008/ionic-socketio-chat-client/blob/master/image/ios.gif?raw=true)  |
 
 If you want to jump straight to the code, it’s on [GitHub](https://github.com/melvin0008/ionic-socketio-chat-client). Otherwise, read on!
 
