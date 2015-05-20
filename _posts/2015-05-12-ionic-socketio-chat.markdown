@@ -8,7 +8,7 @@ In this tutorial, we’ll learn how to create a chat client that communicates wi
 
 |   Android             |  iOS |    
 | :-------------------------: | :-------------------------: |     
-| ![demo](https://github.com/melvin0008/ionic-socketio-chat-client/blob/master/image/demo.gif?raw=true)  |  ![demo](https://github.com/melvin0008/ionic-socketio-chat-client/blob/master/image/ios.gif?raw=true)  |
+| ![demo1](https://github.com/melvin0008/ionic-socketio-chat-client/blob/master/image/demo.gif?raw=true)  |  ![demo](https://github.com/melvin0008/ionic-socketio-chat-client/blob/master/image/ios.gif?raw=true)  |
 
 If you want to jump straight to the code, it’s on [GitHub](https://github.com/melvin0008/ionic-socketio-chat-client). Otherwise, read on!
 
