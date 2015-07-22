@@ -1,12 +1,19 @@
+---
+layout: post
+title:  "Build a reddit API using python"
+date:   2015-07-22
+---
+
 Lets learn how to scrape a website and build an API out of it! For educational purposes, lets scrape [Reddit](http://www.reddit.com/). We will be using Beautiful Soup and Flask in this tutorial. Python is truly beautiful. Don't believe me ? Stay with me till the end of this tutorial.
 
-If you want the entire code check my [github repo](https://github.com/jjerry09/buildredditapi/blob/master/redditapi.py).
+If you want the entire code check my [github repo](https://github.com/melvin0008/redditapi-tutorial).
 ##Know the tools and terms
 ####Whats Scraping?
 HTML tags are the building blocks of any website. Web scraping is extracting data out of these html tags for various purposes. It's used to extract information from websites. It is very useful in automating daily tasks and yeah! it saves a lot of time. Many similar websites can be scraped and analysis can be done on the the data obtained. A simple usecase of scraping would be scraping various shopping websites to obtain the best deal on an item or scrape a website periodically to check availibility of seats.   
 ####So what's Beautiful Soup4?
 Beautiful simplifies extracting, navigating and analysing the HTML to get data out of it. Read the [documentation](http://www.crummy.com/software/BeautifulSoup/bs4/doc/) for Beautiful Soup4. Its short and amazing.
-For example :    
+For example :
+
 ```python
 htmldoc="""
 <html><head><title>The Dormouse's story</title></head>
@@ -50,6 +57,7 @@ If someone is interested in reading about rest I found this article [How I Expla
 ####Flask
 Flask is a microframework for Python web applications. Its amazing!
 A simple hello World program for Flask
+
 ```python
 from flask import Flask
 app = Flask(__name__)
@@ -65,6 +73,7 @@ def hello():
 if __name__ == "__main__":
     app.run()
 ```
+
 In the above example we have an endpoint at '/' . So suppose our application is hosted at xyz.com . When a user goes to xyz.com/ it returns Hello World and similarly when someone visits xyz.com/sayHi Hi is returned. [Json](http://json.org/) is mostly prefered format for communication
 
 ##Setup your environment
@@ -72,7 +81,8 @@ Enough of theory lets code!
 If pip isn't shipped with your version of Python please install pip. Check this [link](https://pip.pypa.io/en/stable/installing.html)
 Using a [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) is a good practice. So lets use it.
 Install virtualenv, flask , requests and beautiful soup in your environment 
-```
+
+```sh
 pip install virtualenv
 mkdir redditapi
 cd redditapi
@@ -82,26 +92,33 @@ pip install flask requests beautifulsoup4
 
 Install Jsonview extension from [chromestore](https://chrome.google.com/webstore/category/apps?utm_source=chrome-app-launcher-info-dialog) or [firefox store](https://addons.mozilla.org/en-us/firefox/addon/jsonview/). It lets you see json in a readable format.
 Lets start coding!
+
 ## Scrape with Beautiful Soup
 Lets hit the REPL. Type python in your terminal.
 REPL is a great way to experiment.
+
 ```python 
 >>>import bs4
 >>>index_url="http://www.reddit.com/"
 ```
+
 To get the html from [Reddit](http://www.reddit.com) we will use the requests library.
+
 ```python 
 >>>import requests
 >>>response=requests.get(index_url)
 ```
+
 The response object contains all the html from reddit.You can check by printing response.text .    
 Visit [Reddit](http://www.reddit.com/) . Hover over the first post and inspect element using Chrome Dev tools or Mozilla Firebug.
 Every website has a particular structure of html tags.    
 The entire reddit content is under the 
+
 ```html
 <div class="content" role="main">... </div> tag.     
 ```
 But all the posts are under the 
+
 ```html
 <div id="siteTable">...</div>
 ```
@@ -114,42 +131,56 @@ First lets get a BeautifulSoup4 obejct by passing the html to the constructor.
 ```python
 >>>soup = bs4.BeautifulSoup(response.text)
 ```
+
 You can print the soup object and can view the html in a 'pretty' way using
+
 ```python
 >>>soup.prettify()
 ```
+
 Now lets find the div with id='siteTable'. We can use the method [select](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#css-selectors)
+
 ```python
 >>>posts=soup.select("div#siteTable")
 ```
+
 Hmmm, we still didnt get the posts. On careful observation we see there are many divs inside the siteTable div.    
 So lets get those divs.
+
 ```python
 >>>posts=soup.select("div#siteTable div")
 ```
+
 What this does is extracts all the divs within the siteTable div into an list. 
 On close observation we can see that the last div within the siteTable div doesn't contain any post. So lets omit that.    
 But how to? The answer is observation :p
-All the posts have a class called thing with the divs. Lets use it.
+All the posts have a class called thing with the divs. Lets use it.      
+
+
 ```python
 >>>posts=soup.select("div#siteTable div.thing")
 ```
+
 Now if you want to confirm whether everything is working fine. Print the first element of posts.
 
 #### Get one post
+
 ```python
 >>>posts[0]
 ```
+
 We can see the entire div for the first post is printed!
 
 Till now all good. But we don't want to return the html. For now lets return a list of dictionaries with the title, link and name of the subreddit. You can add whatever you want till the time it fits the structure.
 
 To get the title of the post and the link of the post, we see its under the paragraph tag with class title.
+
 ```html
 <p class="title">
 <a href="link if the post"> Title of the post</a>
 ```
 Lets extract the title and link. Since we want the first anchor tag lets extract it using the select method
+
 ```python
 >>>info=posts[0].select("p.title a")[0]
 >>>title=info.text
@@ -157,26 +188,35 @@ Lets extract the title and link. Since we want the first anchor tag lets extract
 ```
 
 Now lets get the subreddit. On observation we see that subreddit is under the paragraph with class tagline. The name of the subreddit is under the second anchor tag.
+
 ```python
 subreddit=post[0].select("p.tagline a")[1]
 ```
+
 But, we need to extract the text . So lets do it!
+
 ```python
 subreddit = post[0].select("p.tagline a")[1].text
 ```
+
 We get the text in the unicode format so lets omit the first three characters. 
+
 ```python
 subreddit = post[0].select("p.tagline a")[1].text[3:]
 ```
+
 Lets capitalize the first letter
+
 ```python
 subreddit = post[0].select("p.tagline a")[1].text[3:].capitalize()
 ```
+
 Python oh python!! It's too easy. Isn't it?
 
 #### Get info from all posts.
 We have everything what we need.
 Lets populate the title, link and subreddit for all the posts now. Enough of REPL! lets open a file redditapi.py and refactor our code
+
 ```python
 import requests
 import bs4
@@ -195,6 +235,7 @@ def get_news():
     
 print get_news()
 ```
+
 We create a list of dictionaries which contains title , link and name of the subreddit.   
 We also serialize the object into json formatted string using json.dumps.
 
@@ -231,13 +272,16 @@ def get_rising():
 def get_top():
     return get_news('top/')
 ```
+
 ##Flask is so simple!
 Now lets plugin flask to this code.   
 Lets start with adding importing Flask and creating an object. 
+
 ```python
 from flask import Flask
 app = Flask(__name__)
 ```
+
 We use the route decorator to tell flask what function to call on what route. We also mention the REST method. Since we are always extracting data we will use the GET method.
 
 Add the decorators now!
@@ -260,6 +304,7 @@ def get_top():
 Isn't flask very simple!!
 ####Basic Error handler
 Lets add a 404 page not found error handler. Also import jsonify and make response
+
 ```python
 
 from flask import jsonify , make_response
@@ -267,6 +312,7 @@ from flask import jsonify , make_response
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 ```
+
 #### Let it rip!
 
 Finally we use the run() function to run the local server with our application. The if __name__ == '__main__': makes sure the server only runs if the script is executed directly from the Python interpreter and not used as an imported module.
@@ -297,6 +343,7 @@ Oops theres an error!  This is because on a subreddit page we wont get a subredd
 So lets refactor the code by using an if condtion.
 
 The entire code is only 46 lines!
+
 ```python 
 #!venv/bin/python
 import requests
