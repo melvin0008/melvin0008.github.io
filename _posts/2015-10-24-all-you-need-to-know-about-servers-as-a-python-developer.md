@@ -1,3 +1,9 @@
+---
+layout: post
+title:  "All you want to know about servers as a python developer"
+date:   2015-10-24
+---
+
 ##Introduction
 Servers have confused me quite a bit. I'm sure there will be many python developers who share the same predicament. So let me try to unveil the mist of confusion by sharing everything I know about Servers.
 ##HTTP: Protocol which rules the world wide web!
