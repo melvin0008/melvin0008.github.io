@@ -509,7 +509,7 @@ Add platform :
 
 ```sh
 
-	ionic add platform android or ionic add platform ios
+	ionic platform add android or ionic platform add ios
 ```
 
 Run ionic build: 
