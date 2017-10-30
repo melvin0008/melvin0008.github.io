@@ -15,8 +15,6 @@ paginate: 5
 navigation:
  - title: Home
    url: /index.html
- - title: About
-   url: http://www.melvinphilips.com
 
 social:
    github: melvin0008
